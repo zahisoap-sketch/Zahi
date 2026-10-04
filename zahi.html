@@ -1,0 +1,1595 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5b21b6">
+<title>ZAHI Manager Pro v4.0</title>
+<style>
+:root{--p:#5b21b6;--p2:#7c3aed;--bg:#f5f6fa;--card:#fff;--txt:#171717;--muted:#737373;--line:#e5e7eb;--green:#15803d;--red:#b91c1c;--orange:#b45309;--blue:#1d4ed8;--yellow:#ca8a04}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial;padding-bottom:82px;-webkit-tap-highlight-color:transparent}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:16px 15px;border-radius:0 0 20px 20px;position:sticky;top:0;z-index:5;box-shadow:0 4px 12px #5b21b630}
+header h1{font-size:19px;margin:0;font-weight:800}
+header small{opacity:.85;font-size:11px}
+header .save-indicator{position:absolute;top:18px;left:15px;font-size:10px;opacity:.85;display:flex;align-items:center;gap:4px}
+header .save-indicator .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80}
+main{max-width:900px;margin:auto;padding:12px}
+.page{display:none;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.card{background:#fff;border:1px solid #eee;border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:0 1px 4px #00000008}
+.card.elevated{box-shadow:0 3px 12px #00000010}
+.label,.muted{font-size:12px;color:var(--muted);line-height:1.5}
+.num{font-size:19px;font-weight:850;margin-top:4px;letter-spacing:-.3px}
+.num.lg{font-size:22px}
+.green{color:var(--green)}.red{color:var(--red)}.orange{color:var(--orange)}.blue{color:var(--blue)}.yellow{color:var(--yellow)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.row.wrap{flex-wrap:wrap}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.actions3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+button{border:0;border-radius:10px;padding:11px 12px;font-weight:750;font-size:14px;background:var(--p);color:#fff;cursor:pointer;font-family:inherit;transition:transform .08s,opacity .15s}
+button:active{transform:scale(.97)}
+button.secondary{background:#eef0f5;color:#222}
+button.danger{background:#fee2e2;color:#991b1b}
+button.warn{background:#fef3c7;color:#92400e}
+button.success{background:#dcfce7;color:#166534}
+button.ghost{background:transparent;color:var(--p);border:1px solid #ddd6fe}
+button.mini{padding:6px 10px;font-size:12px;border-radius:8px}
+button.icon{padding:8px;width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{width:100%;border:1px solid #d9d9df;border-radius:10px;padding:11px;margin:5px 0 10px;background:#fff;font-size:15px;font-family:inherit; kool:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--p)}
+label{font-size:13px;font-weight:700;color:#333}
+.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:11px;padding:10px;margin:9px 0;font-size:13px;line-height:1.6}
+.notice.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.notice.err{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.notice.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+.notice.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+.empty{text-align:center;color:#888;padding:22px;font-size:13px}
+.list{border-top:1px solid var(--line);padding:10px 0;font-size:13px;line-height:1.6}
+.list:first-child{border-top:0}
+.tag{background:#f0e8ff;color:var(--p);padding:3px 8px;border-radius:12px;font-size:11px;display:inline-block;font-weight:700}
+.tag.g{background:#dcfce7;color:#166534}
+.tag.r{background:#fee2e2;color:#991b1b}
+.tag.b{background:#dbeafe;color:#1e40af}
+.tag.y{background:#fef3c7;color:#92400e}
+.divider{height:1px;background:var(--line);margin:10px 0}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:4px 2px calc(4px + env(safe-area-inset-bottom));z-index:10;box-shadow:0 -2px 12px #00000010}
+nav button{background:none;color:#888;padding:4px 2px;font-size:10px;font-weight:600;flex:1;transition:color .15s}
+nav button b{display:block;font-size:19px;margin-bottom:1px}
+nav button.active{color:var(--p)}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:20;backdrop-filter:blur(2px)}
+.modal.show{display:flex;animation:fadeIn .15s}
+.sheet{background:#fff;width:100%;max-height:94vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px 24px;animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:.5}to{transform:none;opacity:1}}
+.close{float:left;background:#eee;color:#222;width:34px;height:34px;padding:0;border-radius:50%;font-size:22px;line-height:1;font-weight:400}
+h2{margin:0 0 12px;font-size:18px;font-weight:800}
+h3{margin:16px 0 8px;font-size:14px;font-weight:800;color:#444}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border-bottom:1px solid var(--line);padding:8px 4px;text-align:right}
+th{color:var(--muted);font-weight:700;font-size:11px}
+.toast{position:fixed;bottom:100px;right:50%;transform:translateX(50%);background:#111;color:#fff;padding:11px 18px;border-radius:11px;z-index:100;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90%;box-shadow:0 4px 20px #00000030}
+.toast.show{opacity:1}
+.toast.err{background:#991b1b}
+.toast.ok{background:#166534}
+.toast.warn{background:#92400e}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;background:#eef0f5;border-radius:20px;font-size:12px;font-weight:700;color:#555;border:0;margin:3px 2px;cursor:pointer}
+.chip.active{background:var(--p);color:#fff}
+.search{position:relative;margin:6px 0 10px}
+.search input{margin:0;padding-left:36px}
+.search::before{content:"🔍";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;pointer-events:none;z-index:1}
+.search input{padding-right:36px}
+.stat-icon{font-size:22px;opacity:.15;position:absolute;left:10px;top:10px}
+.card{position:relative;overflow:hidden}
+.bar-row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12px}
+.bar-label{min-width:80px;font-weight:700;color:#555}
+.bar-track{flex:1;height:8px;background:#eef0f5;border-radius:8px;overflow:hidden}
+.bar-fill{height:100%;background:var(--p);border-radius:8px;transition:width .4s}
+.bar-value{min-width:80px;text-align:left;font-weight:700;color:#333;font-size:12px}
+.print-only{display:none}
+@media print{
+  nav,header,.actions,.no-print{display:none!important}
+  body{background:#fff;padding:0}
+  .card{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}
+  .page{display:block!important}
+  .print-only{display:block}
+}
+@media(min-width:650px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .grid3{grid-template-columns:repeat(6,1fr)}
+  .sheet{max-width:900px;margin:auto;border-radius:20px;margin-bottom:30px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ZAHI Manager </h1>
+  <small>إدارة مالية وتشغيلية ومخزون</small>
+  <div class="save-indicator"><span class="dot"></span><span id="saveText">محفوظ</span></div>
+</header>
+
+<main>
+
+<!-- ==================== الرئيسية ==================== -->
+<section id="dashboard" class="page active">
+  <h2>لوحة التحكم</h2>
+  <div class="grid">
+    <div class="card elevated"><span class="stat-icon">💰</span><div class="label">الكااش</div><div id="cashK" class="num"></div></div>
+    <div class="card elevated"><span class="stat-icon">📈</span><div class="label">إيرادات الشهر</div><div id="revenueK" class="num"></div></div>
+    <div class="card elevated"><span class="stat-icon">📊</span><div class="label">صافي الربح</div><div id="profitK" class="num"></div></div>
+    <div class="card elevated"><span class="stat-icon">📦</span><div class="label">سعر الخامات والعبوات</div><div id="invK" class="num"></div></div>
+    <div class="card"><div class="label">تكلفة المباع (COGS)</div><div id="cogsK" class="num"></div></div>
+    <div class="card"><div class="label">مصروفات الشهر</div><div id="expenseK" class="num"></div></div>
+    <div class="card"><div class="label">ديون العملاء</div><div id="arK" class="num"></div></div>
+    <div class="card"><div class="label">مستحقات الموردين</div><div id="apK" class="num"></div></div>
+  </div>
+  <div id="dashboardNote"></div>
+
+  <div class="card">
+    <b>عمليات سريعة</b>
+    <div class="actions" style="margin-top:9px">
+      <button data-modal="production">🏭 إنتاج</button>
+      <button data-modal="sale">🧾 بيع</button>
+      <button class="secondary" data-modal="purchaseCash">🛒 شراء خامات</button>
+      <button class="secondary" data-modal="purchaseCredit">📥 شراء آجل</button>
+      <button class="secondary" data-modal="expense">💸 مصروف</button>
+      <button class="secondary" data-modal="collection">💵 تحصيل</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>أعلى العملاء المستحقين</b>
+    <div id="topCustomers"></div>
+  </div>
+</section>
+
+<!-- ==================== الإنتاج ==================== -->
+<section id="production" class="page">
+  <h2>الإنتاج</h2>
+  <div class="card">
+  
+      
+   <div class="muted">تكلفة الإنتاج لا تصبح مصروفًا فور التصنيع؛ تتحول إلى مخزون منتج تام. عند البيع فقط تُخصم تكلفة الوحدات المباعة.</div> 
+  </div>
+  <div class="search"><input id="prodSearch" placeholder="ابحث في الخلطات..."></div>
+  <div id="batches"></div>
+  <button style="width:100%" data-modal="production">+ تسجيل خلطة جديدة</button>
+</section>
+
+<!-- ==================== المبيعات ==================== -->
+<section id="sales" class="page">
+  <h2>المبيعات</h2>
+  <div class="card">
+    <div class="muted">عند «العبوة»: السعر = سعر العبوة. عند «الكرتونة»: السعر = سعر الكرتونة. الإجمالي = العدد × السعر المُدخل.</div>
+  </div>
+  <div class="search"><input id="salesSearch" placeholder="ابحث في المبيعات..."></div>
+  <div id="sales"></div>
+  <button style="width:100%" data-modal="sale">+ تسجيل بيع</button>
+</section>
+
+<!-- ==================== المخزون ==================== -->
+<section id="inventory" class="page">
+  <h2>المخزون</h2>
+  <div class="grid">
+    <div class="card"><div class="label">خامات</div><div id="rawK" class="num"></div></div>
+    <div class="card"><div class="label">عبوات</div><div id="packK" class="num"></div></div>
+    <div class="card"><div class="label">منتج تام</div><div id="finishedK" class="num"></div></div>
+    <div class="card"><div class="label">الإجمالي</div><div id="invTotalK" class="num"></div></div>
+  </div>
+  <div class="card">
+    <b>عمليات المخزون</b>
+    <div class="actions3" style="margin-top:9px">
+      <button data-modal="purchaseCash" class="success">🛒 شراء نقدي</button>
+      <button data-modal="purchaseCredit" class="warn">📥 شراء آجل</button>
+      <button class="secondary" data-modal="inventoryAdjust">✏️ تصحيح</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row"><b>آخر حركات المخزون</b></div>
+    <div id="inventoryMoves"></div>
+  </div>
+  <div class="card">
+    <b>المنتجات التامة</b>
+    <div id="finishedList"></div>
+  </div>
+</section>
+
+<!-- ==================== التقارير ==================== -->
+<section id="reports" class="page">
+  <h2>التقارير</h2>
+  <div class="card no-print">
+    <div class="row wrap">
+      <div>
+        <button class="chip" data-report-period="month">هذا الشهر</button>
+        <button class="chip" data-report-period="last">الشهر الماضي</button>
+        <button class="chip" data-report-period="year">هذه السنة</button>
+        <button class="chip active" data-report-period="all">الكل</button>
+      </div>
+      <button class="secondary mini" id="printReport">🖨 طباعة</button>
+    </div>
+    <div class="grid" style="margin-top:10px;grid-template-columns:1fr 1fr">
+      <div><label>من تاريخ</label><input id="fromDate" type="date"></div>
+      <div><label>إلى تاريخ</label><input id="toDate" type="date"></div>
+    </div>
+  </div>
+  <div class="card"><b>ملخص الفترة</b><div id="periodReport"></div></div>
+  <div class="card"><b>ربح كل خلطة</b><div id="batchReport"></div></div>
+  <div class="card"><b>أرصدة العملاء</b><div id="customerReport"></div></div>
+  <div class="card"><b>المركز المالي</b><div id="balanceReport"></div></div>
+  <div class="card"><b>تحليل المصروفات</b><div id="expenseReport"></div></div>
+</section>
+
+<!-- ==================== الخزينة ==================== -->
+<section id="treasury" class="page">
+  <h2>الخزينة</h2>
+  <div class="card elevated">
+    <div class="label">النقدية الحالية</div>
+    <div id="cashBig" class="num lg"></div>
+    <div class="muted" id="cashBreakdown"></div>
+  </div>
+  <div class="card">
+    <div class="row">
+      <b>دفعات الموردين</b>
+      <button class="secondary mini" data-modal="supplierPayment">+ دفعة</button>
+    </div>
+    <div id="supplierPaymentsList"></div>
+  </div>
+  <div class="card">
+    <div class="row">
+      <b>المصروفات</b>
+      <button class="secondary mini" data-modal="expense">+ مصروف</button>
+    </div>
+    <div class="search"><input id="expSearch" placeholder="ابحث في المصروفات..."></div>
+    <div id="expenses"></div>
+  </div>
+</section>
+
+<!-- ==================== المزيد ==================== -->
+<section id="more" class="page">
+  <h2>الإدارة</h2>
+
+  <div class="card">
+    <div class="row"><b>الأحجام المنتجة</b><button class="secondary mini" data-modal="product">+ إضافة</button></div>
+    <div id="products"></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><b>العملاء</b><button class="secondary mini" data-modal="customer">+ إضافة</button></div>
+    <div id="customers"></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><b>الموردون</b><button class="secondary mini" data-modal="supplier">+ إضافة</button></div>
+    <div id="suppliers"></div>
+  </div>
+
+  <div class="card">
+    <b>الأرصدة الافتتاحية</b>
+    <p class="muted">تعديل الأرصدة الأساسية للمشروع.</p>
+    <button class="secondary" data-modal="opening" style="width:100%">تعديل الأرصدة</button>
+  </div>
+
+  <div class="card">
+    <b>تصدير البيانات</b>
+    <p class="muted">صدّر نسخة احتياطية أو ملفات Excel/CSV.</p>
+    <div class="actions" style="margin-top:6px">
+      <button class="secondary" id="backup">📦 نسخة JSON</button>
+      <button class="secondary" id="csvExport">📊 تصدير CSV</button>
+    </div>
+    <button class="secondary" id="restore" style="width:100%;margin-top:6px">📥 استعادة نسخة</button>
+    <input id="file" type="file" accept=".json" hidden>
+  </div>
+
+  <div class="card">
+    <b>إعادة تعيين</b>
+    <p class="muted">حذف كل البيانات والعودة للإعدادات الافتراضية.</p>
+    <button class="danger" id="resetAll" style="width:100%">🗑 حذف كل البيانات</button>
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button class="active" data-page="dashboard"><b>⌂</b>الرئيسية</button>
+  <button data-page="production"><b>🏭</b>الإنتاج</button>
+  <button data-page="sales"><b>🧾</b>المبيعات</button>
+  <button data-page="inventory"><b>📦</b>المخزون</button>
+  <button data-page="treasury"><b>💰</b>الخزينة</button>
+  <button data-page="reports"><b>📊</b>تقارير</button>
+  <button data-page="more"><b>☰</b>المزيد</button>
+</nav>
+
+<div id="modal" class="modal">
+  <div class="sheet">
+    <button id="close" class="close">×</button>
+    <div id="content"></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   1) الثوابت
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const KEY = "ZAHI_MANAGER_DATA_V4";
+const oldKeys = ["ZAHI_MANAGER_DATA_V3","ZAHI_MANAGER_DATA_V2","ZAHI_MANAGER_DATA"];
+const CURRENT_VERSION = 4.0;
+
+const base = {
+  version: CURRENT_VERSION,
+  openingCash: 100000,
+  openingAR: 140000,
+  openingAP: 435000,
+  rawStock: 350000,
+  packStock: 410000,
+  equipment: 410000,
+  products: [{ id: "p330", name: "330 مل", ml: 330, pack: 12, price: 0 }],
+  batches: [],
+  sales: [],
+  expenses: [],
+  collections: [],
+  supplierPayments: [],
+  inventoryMoves: [],
+  customers: [],
+  suppliers: []
+};
+
+/* ============================================================
+   2) أدوات مساعدة
+   ============================================================ */
+const num = x => Math.round(Number(x) || 0);
+const money = x => { try { return num(x).toLocaleString("en-US"); } catch(e){ return String(num(x)); } };
+const id = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2,10));
+const today = () => new Date().toISOString().slice(0,10);
+const month = () => today().slice(0,7);
+const lastMonth = () => { const d = new Date(); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7); };
+const year = () => today().slice(0,4);
+const clone = x => JSON.parse(JSON.stringify(x));
+
+function toast(msg, type){
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (type ? " " + type : "");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+function setSaveState(saving){
+  const dot = document.querySelector("header .save-indicator .dot");
+  const txt = $("saveText");
+  if (!dot) return;
+  if (saving){ dot.style.background = "#fbbf24"; txt.textContent = "يحفظ..."; }
+  else { dot.style.background = "#4ade80"; txt.textContent = "محفوظ"; }
+}
+
+/* ============================================================
+   3) البيانات
+   ============================================================ */
+function normalize(x){
+  const d = Object.assign(clone(base), x || {});
+  ["products","batches","sales","expenses","collections",
+   "supplierPayments","inventoryMoves","customers","suppliers"]
+   .forEach(k => { if (!Array.isArray(d[k])) d[k] = []; });
+
+  if (!d.products.length) d.products = clone(base.products);
+
+  d.batches = d.batches.map(b => ({
+    id: b.id || id(),
+    productId: b.productId || "",
+    productName: b.productName || "",
+    qty: num(b.qty), raw: num(b.raw), pack: num(b.pack),
+    extra: num(b.extra), totalCost: num(b.totalCost),
+    unitCost: Number(b.unitCost) || 0,
+    date: b.date || today()
+  }));
+
+  d.sales = d.sales.map(s => ({
+    id: s.id || id(),
+    batchId: s.batchId || "",
+    productId: s.productId || "",
+    productName: s.productName || "",
+    mode: s.mode || "unit",
+    displayQty: num(s.displayQty),
+    units: num(s.units),
+    total: num(s.total),
+    paid: num(s.paid),
+    customer: s.customer || "",
+    date: s.date || today()
+  }));
+
+  d.expenses = d.expenses.map(e => ({
+    id: e.id || id(),
+    note: e.note || "مصروف",
+    category: e.category || "عام",
+    amount: num(e.amount),
+    date: e.date || today()
+  }));
+
+  d.collections = d.collections.map(c => ({
+    id: c.id || id(),
+    customer: c.customer || "",
+    amount: num(c.amount),
+    date: c.date || today()
+  }));
+
+  d.supplierPayments = d.supplierPayments.map(p => ({
+    id: p.id || id(),
+    supplier: p.supplier || "",
+    amount: num(p.amount),
+    note: p.note || "",
+    date: p.date || today()
+  }));
+
+  // ترحيل حركات المخزون من v3
+  d.inventoryMoves = d.inventoryMoves.map(m => {
+    let mode = m.mode || "adjust";
+    if (mode === "add") mode = "purchase_cash";
+    if (mode === "sub") mode = "consume";
+    if (mode === "set") mode = "adjust";
+    const cashAffect = (m.cashAffect === true) || (mode === "purchase_cash");
+    return {
+      id: m.id || id(),
+      type: m.type || "raw",
+      mode,
+      amount: num(m.amount),
+      before: num(m.before),
+      after: num(m.after),
+      supplier: m.supplier || "",
+      note: m.note || "",
+      date: m.date || today(),
+      cashAffect
+    };
+  });
+
+  d.customers = d.customers.map(c => ({ id: c.id || id(), name: c.name || "", phone: c.phone || "" }));
+  d.suppliers = d.suppliers.map(s => ({ id: s.id || id(), name: s.name || "", phone: s.phone || "" }));
+
+  // ترحيل v3 → v4: استنتاج openingCash من الرصيد الحالي
+  if (typeof d.openingCash === "undefined"){
+    const txnEffect =
+      d.sales.reduce((a,s)=>a+s.paid, 0)
+      + d.collections.reduce((a,c)=>a+c.amount, 0)
+      - d.expenses.reduce((a,e)=>a+e.amount, 0)
+      - d.supplierPayments.reduce((a,p)=>a+p.amount, 0)
+      - d.batches.reduce((a,b)=>a+b.extra, 0)
+      - d.inventoryMoves.filter(m => m.cashAffect).reduce((a,m)=>a+m.amount, 0);
+    d.openingCash = num(d.cash || d.openingCash || 0) - txnEffect;
+  }
+
+  d.openingCash = num(d.openingCash);
+  d.openingAR = num(d.openingAR);
+  d.openingAP = num(d.openingAP);
+  d.rawStock = num(d.rawStock);
+  d.packStock = num(d.packStock);
+  d.equipment = num(d.equipment);
+  d.version = CURRENT_VERSION;
+  return d;
+}
+
+function load(){
+  try {
+    let raw = localStorage.getItem(KEY);
+    if (!raw) for (const k of oldKeys){ raw = localStorage.getItem(k); if (raw) break; }
+    return raw ? normalize(JSON.parse(raw)) : clone(base);
+  } catch(e){ return clone(base); }
+}
+
+let d = load();
+
+function save(){
+  setSaveState(true);
+  try {
+    localStorage.setItem(KEY, JSON.stringify(d));
+    render();
+    setTimeout(() => setSaveState(false), 300);
+  } catch(e){
+    setSaveState(false);
+    toast("⚠️ فشل الحفظ: " + (e.message || "التخزين ممتلئ"), "err");
+  }
+}
+
+/* ============================================================
+   4) دوال مساعدة
+   ============================================================ */
+const prod = i => d.products.find(x => x.id === i);
+const bat = i => d.batches.find(x => x.id === i);
+const sold = i => d.sales.filter(x => x.batchId === i).reduce((a,x) => a + x.units, 0);
+const available = b => Math.max(0, b.qty - sold(b.id));
+
+/* ============================================================
+   5) الحسابات المالية
+   ============================================================ */
+function finished(){
+  return d.batches.reduce((a,b) => a + available(b) * b.unitCost, 0);
+}
+function inv(){
+  return num(d.rawStock) + num(d.packStock) + finished();
+}
+function revenue(){ return d.sales.reduce((a,s) => a + s.total, 0); }
+function cogs(){
+  return d.sales.reduce((a,s) => {
+    const b = bat(s.batchId);
+    return a + (b ? s.units * b.unitCost : 0);
+  }, 0);
+}
+function receivable(){
+  return Math.max(0,
+    num(d.openingAR)
+    + d.sales.reduce((a,s) => a + (s.total - s.paid), 0)
+    - d.collections.reduce((a,x) => a + x.amount, 0)
+  );
+}
+function payable(){
+  const creditPurchases = d.inventoryMoves
+    .filter(m => m.mode === "purchase_credit")
+    .reduce((a,m) => a + m.amount, 0);
+  return Math.max(0,
+    num(d.openingAP)
+    + creditPurchases
+    - d.supplierPayments.reduce((a,x) => a + x.amount, 0)
+  );
+}
+function cashBalance(){
+  const cashPurchases = d.inventoryMoves
+    .filter(m => m.cashAffect)
+    .reduce((a,m) => a + m.amount, 0);
+  return num(d.openingCash)
+    + d.sales.reduce((a,s) => a + s.paid, 0)
+    + d.collections.reduce((a,x) => a + x.amount, 0)
+    - d.expenses.reduce((a,e) => a + e.amount, 0)
+    - d.supplierPayments.reduce((a,x) => a + x.amount, 0)
+    - d.batches.reduce((a,b) => a + b.extra, 0)
+    - cashPurchases;
+}
+function customerBalance(name){
+  if (!name) return 0;
+  const purchased = d.sales.filter(s => s.customer === name).reduce((a,s) => a + (s.total - s.paid), 0);
+  const collected = d.collections.filter(c => c.customer === name).reduce((a,c) => a + c.amount, 0);
+  return Math.max(0, purchased - collected);
+}
+function supplierBalance(name){
+  if (!name) return 0;
+  const credited = d.inventoryMoves.filter(m => m.mode === "purchase_credit" && m.supplier === name).reduce((a,m) => a + m.amount, 0);
+  const paid = d.supplierPayments.filter(p => p.supplier === name).reduce((a,p) => a + p.amount, 0);
+  return Math.max(0, credited - paid);
+}
+function equity(){ return cashBalance() + receivable() + inv() + num(d.equipment) - payable(); }
+
+/* فلترة حسب الفترة */
+let reportFrom = null, reportTo = null;
+function inPeriod(dateStr){
+  if (!dateStr) return true;
+  if (reportFrom && dateStr < reportFrom) return false;
+  if (reportTo && dateStr > reportTo) return false;
+  return true;
+}
+function filterPeriod(arr){ return arr.filter(x => inPeriod(x.date)); }
+
+function pRevenue(){ return filterPeriod(d.sales).reduce((a,s) => a + s.total, 0); }
+function pCOGS(){
+  return filterPeriod(d.sales).reduce((a,s) => {
+    const b = bat(s.batchId);
+    return a + (b ? s.units * b.unitCost : 0);
+  }, 0);
+}
+function pEx(){ return filterPeriod(d.expenses).reduce((a,e) => a + e.amount, 0); }
+function pProfit(){ return pRevenue() - pCOGS() - pEx(); }
+
+/* ============================================================
+   6) العرض الرئيسي
+   ============================================================ */
+function render(){
+  try {
+    const mr = pRevenue(), mc = pCOGS(), me = pEx(), mp = mr - mc - me;
+
+    $("cashK").textContent = money(cashBalance()) + " ج";
+    $("revenueK").textContent = money(mr) + " ج";
+    $("cogsK").textContent = money(mc) + " ج";
+    $("expenseK").textContent = money(me) + " ج";
+    $("profitK").textContent = (mp < 0 ? "-" : "") + money(Math.abs(mp)) + " ج";
+    $("profitK").className = "num " + (mp < 0 ? "red" : "green");
+    $("arK").textContent = money(receivable()) + " ج";
+    $("apK").textContent = money(payable()) + " ج";
+    $("invK").textContent = money(inv()) + " ج";
+    $("rawK").textContent = money(d.rawStock) + " ج";
+    $("packK").textContent = money(d.packStock) + " ج";
+    $("finishedK").textContent = money(finished()) + " ج";
+    $("invTotalK").textContent = money(inv()) + " ج";
+    $("cashBig").textContent = money(cashBalance()) + " ج";
+
+    $("cashBreakdown").innerHTML = `
+      رأس المال الافتتاحي: ${money(d.openingCash)} ج +
+      تحصيلات: ${money(d.sales.reduce((a,s)=>a+s.paid,0) + d.collections.reduce((a,c)=>a+c.amount,0))} ج −
+      مدفوعات: ${money(d.expenses.reduce((a,e)=>a+e.amount,0) + d.supplierPayments.reduce((a,p)=>a+p.amount,0) + d.batches.reduce((a,b)=>a+b.extra,0) + d.inventoryMoves.filter(m=>m.cashAffect).reduce((a,m)=>a+m.amount,0))} ج`;
+
+    $("dashboardNote").innerHTML =
+      `<div class="notice ${mp >= 0 ? "ok" : "err"}">
+        <b>معادلة الربح:</b> الإيرادات ${money(mr)} − تكلفة المباع ${money(mc)} − المصروفات ${money(me)}
+        = <b>${money(mp)} ج</b>
+      </div>`;
+
+    /* الخلطات */
+    const prodSearch = ($("prodSearch")?.value || "").toLowerCase();
+    const batchesFiltered = prodSearch
+      ? d.batches.filter(b => (b.productName || "").toLowerCase().includes(prodSearch))
+      : d.batches;
+    $("batches").innerHTML = batchesFiltered.length
+      ? batchesFiltered.slice().reverse().map(b => {
+          const u = sold(b.id);
+          const r = d.sales.filter(s => s.batchId === b.id).reduce((a,s) => a + s.total, 0);
+          const cc = u * b.unitCost;
+          const profit = r - cc;
+          const pack = prod(b.productId)?.pack || 12;
+          return `<div class="card">
+            <div class="row"><b>${b.productName}</b><span class="tag">${b.qty} عبوة ≈ ${Math.floor(b.qty/pack)} بكت</span></div>
+            <div class="muted">تكلفة الإنتاج: ${money(b.totalCost)} ج • تكلفة العبوة: ${money(b.unitCost)} ج</div>
+            <div class="muted">المباع: ${u} • المتبقي: ${available(b)} • إيراد المباع: ${money(r)} ج • <b class="${profit>=0?"green":"red"}">ربح: ${money(profit)} ج</b></div>
+            <div class="actions" style="margin-top:8px">
+              <button class="secondary mini edit-batch" data-id="${b.id}">✏️ تعديل</button>
+              <button class="danger mini del-batch" data-id="${b.id}">🗑 حذف</button>
+            </div>
+          </div>`;
+        }).join("")
+      : `<div class="card empty">${prodSearch ? "لا نتائج مطابقة" : "لا توجد خلطات."}</div>`;
+
+    /* المبيعات */
+    const salesSearch = ($("salesSearch")?.value || "").toLowerCase();
+    const salesFiltered = salesSearch
+      ? d.sales.filter(s => (s.productName || "").toLowerCase().includes(salesSearch) || (s.customer || "").toLowerCase().includes(salesSearch))
+      : d.sales;
+    $("sales").innerHTML = salesFiltered.length
+      ? salesFiltered.slice().reverse().map(s => `
+          <div class="card">
+            <div class="row"><b>${s.productName}</b><b>${money(s.total)} ج</b></div>
+            <div class="muted">${s.date} • ${s.mode === "carton" ? s.displayQty + " بكت (" + s.units + " عبوة)" : s.units + " عبوة"} • محصل ${money(s.paid)} • ${s.total - s.paid > 0 ? '<span class="tag r">آجل ' + money(s.total-s.paid) + ' ج</span>' : '<span class="tag g">مسدد</span>'}${s.customer ? " • " + s.customer : ""}</div>
+            <div class="actions" style="margin-top:8px">
+              <button class="secondary mini edit-sale" data-id="${s.id}">✏️ تعديل</button>
+              <button class="danger mini del-sale" data-id="${s.id}">🗑 حذف</button>
+            </div>
+          </div>`).join("")
+      : `<div class="card empty">${salesSearch ? "لا نتائج مطابقة" : "لا توجد مبيعات."}</div>`;
+
+    /* المصروفات */
+    const expSearch = ($("expSearch")?.value || "").toLowerCase();
+    const expFiltered = expSearch
+      ? d.expenses.filter(e => (e.note || "").toLowerCase().includes(expSearch) || (e.category || "").toLowerCase().includes(expSearch))
+      : d.expenses;
+    $("expenses").innerHTML = expFiltered.length
+      ? expFiltered.slice().reverse().map(e => `
+          <div class="card row">
+            <span><b>${e.note}</b><br><small class="muted">${e.date} • ${e.category}</small></span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <b>${money(e.amount)} ج</b>
+              <button class="danger mini del-exp" data-id="${e.id}">🗑</button>
+            </div>
+          </div>`).join("")
+      : `<div class="card empty">${expSearch ? "لا نتائج" : "لا توجد مصروفات."}</div>`;
+
+    /* دفعات الموردين */
+    $("supplierPaymentsList").innerHTML = d.supplierPayments.length
+      ? d.supplierPayments.slice().reverse().slice(0, 20).map(p => `
+          <div class="list row">
+            <span><b>${p.supplier || "غير محدد"}</b> — ${money(p.amount)} ج
+              <br><small class="muted">${p.date}${p.note ? " • " + p.note : ""}</small></span>
+            <button class="danger mini del-sp" data-id="${p.id}">🗑</button>
+          </div>`).join("")
+      : "<div class='empty'>لا توجد دفعات.</div>";
+
+    /* حركات المخزون */
+    $("inventoryMoves").innerHTML = d.inventoryMoves.length
+      ? d.inventoryMoves.slice().reverse().slice(0, 15).map(m => {
+          const label = m.mode === "purchase_cash" ? "🛒 شراء نقدي"
+                      : m.mode === "purchase_credit" ? "📥 شراء آجل"
+                      : m.mode === "consume" ? "📦 استهلاك" : "✏️ تصحيح";
+          return `<div class="list">
+            ${m.type === "raw" ? "خامات" : "عبوات"} • ${label}
+            • ${money(m.amount)} ج
+            <small class="muted">(من ${money(m.before)} إلى ${money(m.after)}) ${m.note ? "• " + m.note : ""} • ${m.date}</small>
+          </div>`;
+        }).join("")
+      : "<div class='empty'>لا توجد حركات.</div>";
+
+    /* المنتجات التامة */
+    const finishedBatches = d.batches.filter(b => available(b) > 0);
+    $("finishedList").innerHTML = finishedBatches.length
+      ? finishedBatches.map(b => `
+          <div class="list row">
+            <span><b>${b.productName}</b> — المتاح: ${available(b)} عبوة
+              <br><small class="muted">تكلفة العبوة: ${money(b.unitCost)} ج • القيمة: ${money(available(b) * b.unitCost)} ج</small></span>
+          </div>`).join("")
+      : "<div class='empty'>لا يوجد منتج تام متاح.</div>";
+
+    /* المنتجات */
+    $("products").innerHTML = d.products.length
+      ? d.products.map(p => `
+          <div class="list row">
+            <span><b>${p.name}</b> • ${p.pack} عبوة/بكت${p.ml ? " • " + p.ml + " مل" : ""}${p.price > 0 ? " • سعر مقترح " + money(p.price) + " ج" : ""}</span>
+            <button class="danger mini del-prod" data-id="${p.id}">🗑</button>
+          </div>`).join("")
+      : "<div class='empty'>لا توجد أحجام.</div>";
+
+    /* العملاء */
+    $("customers").innerHTML = d.customers.length
+      ? d.customers.map(c => {
+          const bal = customerBalance(c.name);
+          return `<div class="list row">
+            <span><b>${c.name}</b>${c.phone ? " • " + c.phone : ""}${bal > 0 ? ` <span class="tag r">مستحق: ${money(bal)} ج</span>` : ""}</span>
+            <button class="danger mini del-cust" data-id="${c.id}">🗑</button>
+          </div>`;
+        }).join("")
+      : "<div class='empty'>لا يوجد عملاء.</div>";
+
+    /* الموردون */
+    $("suppliers").innerHTML = d.suppliers.length
+      ? d.suppliers.map(s => {
+          const bal = supplierBalance(s.name);
+          return `<div class="list row">
+            <span><b>${s.name}</b>${s.phone ? " • " + s.phone : ""}${bal > 0 ? ` <span class="tag r">مستحق: ${money(bal)} ج</span>` : ""}</span>
+            <button class="danger mini del-sup" data-id="${s.id}">🗑</button>
+          </div>`;
+        }).join("")
+      : "<div class='empty'>لا يوجد موردون.</div>";
+
+    /* أعلى العملاء المستحقين */
+    const topCust = d.customers
+      .map(c => ({ name: c.name, bal: customerBalance(c.name) }))
+      .filter(c => c.bal > 0)
+      .sort((a,b) => b.bal - a.bal)
+      .slice(0, 5);
+    $("topCustomers").innerHTML = topCust.length
+      ? topCust.map(c => `<div class="list row"><span>${c.name}</span><b class="red">${money(c.bal)} ج</b></div>`).join("")
+      : "<div class='empty'>لا توجد مستحقات.</div>";
+
+    /* تقرير الفترة */
+    $("periodReport").innerHTML = `
+      <div class="list">الإيرادات: <b>${money(mr)} ج</b></div>
+      <div class="list">تكلفة المنتجات المباعة: <b>${money(mc)} ج</b></div>
+      <div class="list">المصروفات: <b>${money(me)} ج</b></div>
+      <div class="list">صافي الربح/الخسارة: <b class="${mp >= 0 ? "green" : "red"}">${money(mp)} ج</b></div>
+      <div class="list">هامش الربح: <b>${mr > 0 ? ((mp/mr)*100).toFixed(1) : 0}%</b></div>`;
+
+    /* تقرير الخلطات */
+    $("batchReport").innerHTML = d.batches.length
+      ? d.batches.map(b => {
+          const ss = filterPeriod(d.sales.filter(s => s.batchId === b.id));
+          const u = ss.reduce((a,s) => a + s.units, 0);
+          const r = ss.reduce((a,s) => a + s.total, 0);
+          const c = u * b.unitCost;
+          return `<div class="list"><b>${b.productName}</b><br>
+            <small class="muted">الإنتاج ${b.qty} • المباع ${u} • المتبقي ${available(b)}</small><br>
+            الإيراد ${money(r)} − التكلفة ${money(c)} = <b class="${r-c>=0?"green":"red"}">${money(r-c)} ج</b>
+          </div>`;
+        }).join("")
+      : "<div class='empty'>لا توجد خلطات.</div>";
+
+    /* تقرير العملاء */
+    const custWithBal = d.customers.map(c => ({ name: c.name, bal: customerBalance(c.name) })).filter(c => c.bal > 0);
+    $("customerReport").innerHTML = custWithBal.length
+      ? custWithBal.map(c => `<div class="list row"><span><b>${c.name}</b></span><b class="red">${money(c.bal)} ج</b></div>`).join("")
+      : "<div class='empty'>لا توجد أرصدة عملاء.</div>";
+
+    /* المركز المالي */
+    $("balanceReport").innerHTML = `
+      <div class="list">النقدية: <b>${money(cashBalance())} ج</b></div>
+      <div class="list">مستحقات العملاء: <b>${money(receivable())} ج</b></div>
+      <div class="list">المخزون: <b>${money(inv())} ج</b></div>
+      <div class="list">أصول ثابتة: <b>${money(d.equipment)} ج</b></div>
+      <div class="divider"></div>
+      <div class="list">إجمالي الأصول: <b>${money(cashBalance() + receivable() + inv() + num(d.equipment))} ج</b></div>
+      <div class="list">مستحقات الموردين: <b class="red">${money(payable())} ج</b></div>
+      <div class="divider"></div>
+      <div class="list"><b>صافي قيمة المشروع: <span class="blue">${money(equity())} ج</span></b></div>`;
+
+    /* تحليل المصروفات */
+    const expByCat = {};
+    filterPeriod(d.expenses).forEach(e => { expByCat[e.category || "عام"] = (expByCat[e.category || "عام"] || 0) + e.amount; });
+    const totalExp = Object.values(expByCat).reduce((a,v) => a + v, 0);
+    const entries = Object.entries(expByCat).sort((a,b) => b[1] - a[1]);
+    $("expenseReport").innerHTML = entries.length
+      ? entries.map(([cat, amt]) => {
+          const pct = totalExp > 0 ? (amt/totalExp*100) : 0;
+          return `<div class="bar-row">
+            <div class="bar-label">${cat}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+            <div class="bar-value">${money(amt)} ج (${pct.toFixed(0)}%)</div>
+          </div>`;
+        }).join("")
+      : "<div class='empty'>لا توجد مصروفات.</div>";
+
+    /* ربط الأزرار */
+    document.querySelectorAll(".edit-batch").forEach(b => b.onclick = () => editBatch(b.dataset.id));
+    document.querySelectorAll(".del-batch").forEach(b => b.onclick = () => delBatch(b.dataset.id));
+    document.querySelectorAll(".edit-sale").forEach(b => b.onclick = () => editSale(b.dataset.id));
+    document.querySelectorAll(".del-sale").forEach(b => b.onclick = () => delSale(b.dataset.id));
+    document.querySelectorAll(".del-exp").forEach(b => b.onclick = () => delExpense(b.dataset.id));
+    document.querySelectorAll(".del-sp").forEach(b => b.onclick = () => delSupplierPayment(b.dataset.id));
+    document.querySelectorAll(".del-prod").forEach(b => b.onclick = () => delProduct(b.dataset.id));
+    document.querySelectorAll(".del-cust").forEach(b => b.onclick = () => delCustomer(b.dataset.id));
+    document.querySelectorAll(".del-sup").forEach(b => b.onclick = () => delSupplier(b.dataset.id));
+
+  } catch(err){
+    console.error(err);
+    toast("خطأ في العرض: " + err.message, "err");
+  }
+}
+
+/* ============================================================
+   7) دوال الحذف
+   ============================================================ */
+function delBatch(i){
+  const b = bat(i); if (!b) return;
+  if (d.sales.some(s => s.batchId === i)) return alert("لا يمكن حذف الخلطة لوجود مبيعات مرتبطة.");
+  if (!confirm(`حذف الخلطة "${b.productName}" (${b.qty} عبوة)؟\nسيُعاد رصيد الخامات والعبوات.`)) return;
+  d.rawStock += b.raw;
+  d.packStock += b.pack;
+  d.batches = d.batches.filter(x => x.id !== i);
+  toast("تم حذف الخلطة", "ok"); save();
+}
+
+function delSale(i){
+  const s = d.sales.find(x => x.id === i); if (!s) return;
+  if (!confirm(`حذف عملية البيع بمبلغ ${money(s.total)} ج؟`)) return;
+  d.sales = d.sales.filter(x => x.id !== i);
+  toast("تم حذف البيع", "ok"); save();
+}
+
+function delExpense(i){
+  const e = d.expenses.find(x => x.id === i); if (!e) return;
+  if (!confirm(`حذف المصروف "${e.note}" بمبلغ ${money(e.amount)} ج؟`)) return;
+  d.expenses = d.expenses.filter(x => x.id !== i);
+  toast("تم حذف المصروف", "ok"); save();
+}
+
+function delSupplierPayment(i){
+  const p = d.supplierPayments.find(x => x.id === i); if (!p) return;
+  if (!confirm(`حذف دفعة ${money(p.amount)} ج للمورد "${p.supplier}"؟`)) return;
+  d.supplierPayments = d.supplierPayments.filter(x => x.id !== i);
+  toast("تم حذف الدفعة", "ok"); save();
+}
+
+function delProduct(i){
+  if (d.products.length <= 1) return alert("لا يمكن حذف آخر حجم.");
+  if (d.batches.some(b => b.productId === i)) return alert("لا يمكن الحذف لوجود خلطات مرتبطة.");
+  if (!confirm("حذف هذا الحجم؟")) return;
+  d.products = d.products.filter(x => x.id !== i);
+  toast("تم الحذف", "ok"); save();
+}
+
+function delCustomer(i){
+  const c = d.customers.find(x => x.id === i); if (!c) return;
+  if (customerBalance(c.name) > 0) return alert("لا يمكن الحذف لأن عليه رصيدًا ("+money(customerBalance(c.name))+" ج).");
+  if (d.sales.some(s => s.customer === c.name) || d.collections.some(x => x.customer === c.name))
+    return alert("لا يمكن الحذف لوجود مبيعات أو تحصيلات باسمه.");
+  if (!confirm("حذف العميل؟")) return;
+  d.customers = d.customers.filter(x => x.id !== i);
+  toast("تم الحذف", "ok"); save();
+}
+
+function delSupplier(i){
+  const s = d.suppliers.find(x => x.id === i); if (!s) return;
+  if (supplierBalance(s.name) > 0) return alert("لا يمكن الحذف لأن عليه مستحقات.");
+  if (d.supplierPayments.some(p => p.supplier === s.name) || d.inventoryMoves.some(m => m.supplier === s.name))
+    return alert("لا يمكن الحذف لوجود سجلات باسمه.");
+  if (!confirm("حذف المورد؟")) return;
+  d.suppliers = d.suppliers.filter(x => x.id !== i);
+  toast("تم الحذف", "ok"); save();
+}
+
+/* ============================================================
+   8) النوافذ
+   ============================================================ */
+function modal(html){ $("content").innerHTML = html; $("modal").classList.add("show"); }
+function closeModal(){ $("modal").classList.remove("show"); $("content").innerHTML = ""; }
+
+function open(type){
+
+  /* --- إنتاج --- */
+  if (type === "production"){
+    if (!d.products.length) return alert("أضف حجمًا واحدًا على الأقل أولاً.");
+    modal(`<h2>تسجيل خلطة إنتاج</h2>
+      <div class="notice info">الرصيد: خامات ${money(d.rawStock)} ج • عبوات ${money(d.packStock)} ج • نقدية ${money(cashBalance())} ج</div>
+      <label>الحجم</label>
+      <select id="pp">${d.products.map(p => `<option value="${p.id}">${p.name}</option>`).join("")}</select>
+      <label>عدد العبوات المنتجة</label>
+      <input id="pq" type="number" min="1" inputmode="numeric">
+      <label>قيمة الخامات المستهلكة</label>
+      <input id="pr" type="number" min="0" value="0" inputmode="numeric">
+      <label>قيمة العبوات المستهلكة</label>
+      <input id="pk" type="number" min="0" value="0" inputmode="numeric">
+      <label>تكاليف إضافية (تُخصم من النقدية)</label>
+      <input id="pe" type="number" min="0" value="0" inputmode="numeric">
+      <label>التاريخ</label>
+      <input id="pd" type="date" value="${today()}">
+      <div id="prodCalc" class="notice info">أدخل البيانات لعرض التكلفة.</div>
+      <button id="sp" style="width:100%">حفظ الخلطة</button>`);
+
+    const calc = () => {
+      const q = num($("pq").value), r = num($("pr").value), k = num($("pk").value), e = num($("pe").value);
+      const t = r + k + e;
+      if (q > 0) $("prodCalc").innerHTML = `التكلفة الكلية: <b>${money(t)} ج</b> • تكلفة العبوة: <b>${money(t/q)} ج</b>`;
+      else $("prodCalc").textContent = "أدخل البيانات لعرض التكلفة.";
+    };
+    ["pq","pr","pk","pe"].forEach(x => $(x).addEventListener("input", calc));
+
+    $("sp").onclick = () => {
+      const p = prod($("pp").value);
+      const q = num($("pq").value), r = num($("pr").value), k = num($("pk").value), e = num($("pe").value);
+      if (!p || q < 1) return alert("أدخل كمية صحيحة.");
+      if (r > d.rawStock) return alert("قيمة الخامات أكبر من المخزون (" + money(d.rawStock) + " ج).");
+      if (k > d.packStock) return alert("قيمة العبوات أكبر من المخزون (" + money(d.packStock) + " ج).");
+      if (e > cashBalance()) return alert("التكاليف الإضافية أكبر من النقدية (" + money(cashBalance()) + " ج).");
+      const t = r + k + e;
+      d.rawStock -= r;
+      d.packStock -= k;
+      d.batches.push({
+        id: id(), productId: p.id, productName: p.name,
+        qty: q, raw: r, pack: k, extra: e,
+        totalCost: t, unitCost: t/q, date: $("pd").value
+      });
+      closeModal(); toast("تم تسجيل الخلطة", "ok"); save();
+    };
+  }
+
+  /* --- بيع --- */
+  if (type === "sale"){
+    const bs = d.batches.filter(b => available(b) > 0);
+    if (!bs.length) return modal(`<h2>تسجيل بيع</h2><div class="notice">لا يوجد منتج تام متاح. سجّل خلطة إنتاج أولاً.</div>`);
+
+    modal(`<h2>تسجيل بيع</h2>
+      <label>الخلطة</label>
+      <select id="sb">${bs.map(b => `<option value="${b.id}">${b.productName} — ${available(b)} عبوة (تكلفة ${money(b.unitCost)} ج)</option>`).join("")}</select>
+      <label>وحدة البيع</label>
+      <select id="sm"><option value="unit">عبوة</option><option value="carton">بكت / كرتونة</option></select>
+      <label>عدد الوحدات المختارة</label>
+      <input id="sq" type="number" min="1" inputmode="numeric">
+      <label>سعر الوحدة المختارة</label>
+      <input id="spx" type="number" min="0" inputmode="numeric">
+      <div id="saleCalc" class="notice info">اختر الكمية والسعر.</div>
+      <label>العميل</label>
+      <select id="sc"><option value="">غير مسجل</option>${d.customers.map(c => `<option>${c.name}</option>`).join("")}</select>
+      <label>المدفوع الآن</label>
+      <input id="paid" type="number" min="0" value="0" inputmode="numeric">
+      <label>التاريخ</label>
+      <input id="sd" type="date" value="${today()}">
+      <button id="ss" style="width:100%">حفظ البيع</button>`);
+
+    const calc = () => {
+      const b = bat($("sb").value); if (!b) return;
+      const p = prod(b.productId);
+      const mode = $("sm").value;
+      const q = num($("sq").value), price = num($("spx").value);
+      const pack = p?.pack || 12;
+      const units = mode === "carton" ? q * pack : q;
+      const total = q * price;
+      const cost = units * b.unitCost;
+      const profit = total - cost;
+      const box = $("saleCalc");
+      if (q > 0 && price > 0){
+        box.className = "notice " + (profit < 0 ? "err" : "ok");
+        box.innerHTML = `
+          ${mode === "carton" ? `عدد الكراتين: <b>${money(q)}</b> • العبوات: <b>${money(units)}</b><br>` : `عدد العبوات: <b>${money(units)}</b><br>`}
+          الإجمالي: <b>${money(total)} ج</b> • التكلفة: ${money(cost)} ج • الربح: <b>${money(profit)} ج</b>
+          ${profit < 0 ? "<br>⚠️ تحذير: البيع بأقل من التكلفة!" : ""}`;
+      } else {
+        box.className = "notice info";
+        box.textContent = "اختر الكمية والسعر.";
+      }
+    };
+    ["sb","sm","sq","spx"].forEach(x => $(x).addEventListener("input", calc));
+    calc();
+
+    $("ss").onclick = () => {
+      const b = bat($("sb").value); if (!b) return;
+      const p = prod(b.productId);
+      const mode = $("sm").value;
+      const q = num($("sq").value), price = num($("spx").value);
+      const pack = p?.pack || 12;
+      const units = mode === "carton" ? q * pack : q;
+      const total = q * price;
+      const paid = num($("paid").value);
+      if (q < 1 || price <= 0) return alert("أدخل الكمية والسعر.");
+      if (units > available(b)) return alert("الكمية أكبر من المتاح (" + available(b) + " عبوة).");
+      if (paid > total) return alert("المدفوع أكبر من الإجمالي.");
+      d.sales.push({
+        id: id(), batchId: b.id, productId: p.id, productName: p.name,
+        mode, displayQty: q, units, total, paid,
+        customer: $("sc").value, date: $("sd").value
+      });
+      closeModal(); toast("تم تسجيل البيع", "ok"); save();
+    };
+  }
+
+  /* --- شراء نقدي --- */
+  if (type === "purchaseCash"){
+    modal(`<h2>🛒 شراء نقدي</h2>
+      <div class="notice info">النقدية الحالية: <b>${money(cashBalance())} ج</b></div>
+      <label>النوع</label>
+      <select id="pc_type"><option value="raw">خامات</option><option value="pack">عبوات</option></select>
+      <label>القيمة</label>
+      <input id="pc_amt" type="number" min="0" inputmode="numeric">
+      <label>البيان</label>
+      <input id="pc_note" placeholder="مثال: شراء سكر وألوان">
+      <label>التاريخ</label>
+      <input id="pc_date" type="date" value="${today()}">
+      <div id="pcPreview" class="notice info">أدخل القيمة لعرض التأثير.</div>
+      <button id="pc_save" class="success" style="width:100%">تأكيد الشراء</button>`);
+
+    const preview = () => {
+      const amt = num($("pc_amt").value);
+      const box = $("pcPreview");
+      if (amt <= 0){ box.className = "notice info"; box.textContent = "أدخل القيمة."; return; }
+      const newCash = cashBalance() - amt;
+      box.className = "notice " + (newCash < 0 ? "err" : "ok");
+      box.innerHTML = `النقدية بعد الشراء: <b>${money(newCash)} ج</b>
+        ${newCash < 0 ? "<br>⚠️ تحذير: ستصبح سالبة!" : ""}`;
+    };
+    $("pc_amt").addEventListener("input", preview);
+
+    $("pc_save").onclick = () => {
+      const type_ = $("pc_type").value;
+      const amt = num($("pc_amt").value);
+      if (amt <= 0) return alert("أدخل قيمة صحيحة.");
+      const newCash = cashBalance() - amt;
+      if (newCash < 0){
+        if (!confirm("⚠️ النقدية ستصبح سالبة (" + money(newCash) + " ج).\nمتابعة؟")) return;
+      }
+      const field = type_ === "raw" ? "rawStock" : "packStock";
+      const before = num(d[field]);
+      d[field] = before + amt;
+      d.inventoryMoves.push({
+        id: id(), type: type_, mode: "purchase_cash",
+        amount: amt, before, after: d[field],
+        supplier: "", note: $("pc_note").value.trim() || "شراء نقدي",
+        date: $("pc_date").value, cashAffect: true
+      });
+      closeModal(); toast("تم تسجيل الشراء", "ok"); save();
+    };
+  }
+
+  /* --- شراء آجل --- */
+  if (type === "purchaseCredit"){
+    modal(`<h2>📥 شراء آجل (من مورد)</h2>
+      <div class="notice warn">يزيد المخزون والمستحقات للمورد (بدون خصم من النقدية الآن).</div>
+      <label>النوع</label>
+      <select id="pk_type"><option value="raw">خامات</option><option value="pack">عبوات</option></select>
+      <label>المورد</label>
+      <select id="pk_sup">
+        <option value="">غير محدد</option>
+        ${d.suppliers.map(s => `<option>${s.name}</option>`).join("")}
+      </select>
+      <label>القيمة</label>
+      <input id="pk_amt" type="number" min="0" inputmode="numeric">
+      <label>البيان</label>
+      <input id="pk_note" placeholder="مثال: توريد خامات">
+      <label>التاريخ</label>
+      <input id="pk_date" type="date" value="${today()}">
+      <button id="pk_save" class="warn" style="width:100%">تأكيد الشراء الآجل</button>`);
+
+    $("pk_save").onclick = () => {
+      const type_ = $("pk_type").value;
+      const amt = num($("pk_amt").value);
+      if (amt <= 0) return alert("أدخل قيمة صحيحة.");
+      const field = type_ === "raw" ? "rawStock" : "packStock";
+      const before = num(d[field]);
+      d[field] = before + amt;
+      d.inventoryMoves.push({
+        id: id(), type: type_, mode: "purchase_credit",
+        amount: amt, before, after: d[field],
+        supplier: $("pk_sup").value || "غير محدد",
+        note: $("pk_note").value.trim() || "شراء آجل",
+        date: $("pk_date").value, cashAffect: false
+      });
+      closeModal(); toast("تم تسجيل الشراء الآجل", "ok"); save();
+    };
+  }
+
+  /* --- تصحيح المخزون --- */
+  if (type === "inventoryAdjust"){
+    modal(`<h2>✏️ تصحيح المخزون</h2>
+      <div class="notice info">لتعديل الرصيد يدويًا (بدون تأثير نقدي).</div>
+      <label>النوع</label>
+      <select id="ia_type"><option value="raw">خامات</option><option value="pack">عبوات</option></select>
+      <label>العملية</label>
+      <select id="ia_mode">
+        <option value="consume">📦 استهلاك / خصم</option>
+        <option value="adjust">✏️ تصحيح الرصيد (تعيين قيمة جديدة)</option>
+      </select>
+      <label>القيمة</label>
+      <input id="ia_amt" type="number" min="0" inputmode="numeric">
+      <label>السبب</label>
+      <input id="ia_note">
+      <button id="ia_save" style="width:100%">حفظ</button>`);
+
+    $("ia_save").onclick = () => {
+      const type_ = $("ia_type").value;
+      const mode = $("ia_mode").value;
+      const amt = num($("ia_amt").value);
+      const field = type_ === "raw" ? "rawStock" : "packStock";
+      const before = num(d[field]);
+      let after = before;
+      if (amt < 0) return alert("القيمة يجب أن تكون موجبة.");
+      if (mode === "consume"){
+        if (amt > before) return alert("لا يمكن الخصم أكبر من الرصيد (" + money(before) + " ج).");
+        after = before - amt;
+      } else {
+        after = amt;
+      }
+      d[field] = after;
+      d.inventoryMoves.push({
+        id: id(), type: type_, mode, amount: amt,
+        before, after, supplier: "",
+        note: $("ia_note").value.trim() || (mode === "consume" ? "استهلاك" : "تصحيح"),
+        date: today(), cashAffect: false
+      });
+      closeModal(); toast("تم الحفظ", "ok"); save();
+    };
+  }
+
+  /* --- مصروف --- */
+  if (type === "expense"){
+    modal(`<h2>💸 تسجيل مصروف</h2>
+      <label>البيان</label>
+      <input id="en" placeholder="مثال: كهرباء، إيجار...">
+      <label>التصنيف</label>
+      <select id="ec">
+        <option>عام</option><option>رواتب</option><option>إيجار</option>
+        <option>كهرباء وماء</option><option>نقل</option><option>صيانة</option>
+        <option>تسويق</option><option>أخرى</option>
+      </select>
+      <label>المبلغ</label>
+      <input id="ea" type="number" min="0" inputmode="numeric">
+      <label>التاريخ</label>
+      <input id="ed" type="date" value="${today()}">
+      <button id="se" style="width:100%">حفظ</button>`);
+
+    $("se").onclick = () => {
+      const a = num($("ea").value);
+      if (a <= 0) return alert("أدخل مبلغًا صحيحًا.");
+      if (a > cashBalance() && !confirm("⚠️ المبلغ أكبر من النقدية. متابعة؟")) return;
+      d.expenses.push({
+        id: id(), note: $("en").value.trim() || "مصروف",
+        category: $("ec").value, amount: a, date: $("ed").value
+      });
+      closeModal(); toast("تم تسجيل المصروف", "ok"); save();
+    };
+  }
+
+  /* --- تحصيل --- */
+  if (type === "collection"){
+    const totalAR = receivable();
+    if (totalAR <= 0) return modal(`<h2>💵 تحصيل</h2><div class="notice">لا توجد مستحقات.</div>`);
+
+    modal(`<h2>💵 تحصيل من عميل</h2>
+      <div class="notice info">إجمالي المستحق: <b>${money(totalAR)} ج</b></div>
+      <label>العميل</label>
+      <select id="cc">
+        <option value="">غير محدد</option>
+        ${d.customers.map(c => {
+          const bal = customerBalance(c.name);
+          return `<option value="${c.name}">${c.name}${bal > 0 ? " (مستحق " + money(bal) + " ج)" : ""}</option>`;
+        }).join("")}
+      </select>
+      <label>المبلغ</label>
+      <input id="ca" type="number" min="0" inputmode="numeric">
+      <label>التاريخ</label>
+      <input id="cd" type="date" value="${today()}">
+      <button id="scoll" style="width:100%">حفظ التحصيل</button>`);
+
+    $("scoll").onclick = () => {
+      const a = num($("ca").value);
+      const customer = $("cc").value;
+      if (a <= 0) return alert("أدخل مبلغًا صحيحًا.");
+      if (a > totalAR) return alert("المبلغ أكبر من الإجمالي (" + money(totalAR) + " ج).");
+      if (customer && a > customerBalance(customer))
+        return alert("المبلغ أكبر من رصيد العميل (" + money(customerBalance(customer)) + " ج).");
+      d.collections.push({ id: id(), customer, amount: a, date: $("cd").value });
+      closeModal(); toast("تم تسجيل التحصيل", "ok"); save();
+    };
+  }
+
+  /* --- دفعة مورد --- */
+  if (type === "supplierPayment"){
+    const totalAP = payable();
+    if (totalAP <= 0) return modal(`<h2>دفعة مورد</h2><div class="notice">لا توجد مستحقات للموردين.</div>`);
+
+    modal(`<h2>دفعة لمورد</h2>
+      <div class="notice info">إجمالي المستحق: <b>${money(totalAP)} ج</b> • النقدية: ${money(cashBalance())} ج</div>
+      <label>المورد</label>
+      <select id="sp_sup">
+        <option value="">غير محدد</option>
+        ${d.suppliers.map(s => {
+          const bal = supplierBalance(s.name);
+          return `<option value="${s.name}">${s.name}${bal > 0 ? " (مستحق " + money(bal) + " ج)" : ""}</option>`;
+        }).join("")}
+      </select>
+      <label>المبلغ</label>
+      <input id="sp_amt" type="number" min="0" inputmode="numeric">
+      <label>ملاحظة</label>
+      <input id="sp_note">
+      <label>التاريخ</label>
+      <input id="sp_date" type="date" value="${today()}">
+      <button id="sp_save" style="width:100%">حفظ الدفعة</button>`);
+
+    $("sp_save").onclick = () => {
+      const a = num($("sp_amt").value);
+      const supplier = $("sp_sup").value;
+      if (a <= 0) return alert("أدخل مبلغًا صحيحًا.");
+      if (a > totalAP) return alert("المبلغ أكبر من الإجمالي (" + money(totalAP) + " ج).");
+      if (supplier && a > supplierBalance(supplier))
+        return alert("المبلغ أكبر من مستحق المورد (" + money(supplierBalance(supplier)) + " ج).");
+      if (a > cashBalance()) return alert("المبلغ أكبر من النقدية (" + money(cashBalance()) + " ج).");
+      d.supplierPayments.push({
+        id: id(), supplier: supplier || "غير محدد",
+        amount: a, note: $("sp_note").value.trim(), date: $("sp_date").value
+      });
+      closeModal(); toast("تم تسجيل الدفعة", "ok"); save();
+    };
+  }
+
+  /* --- حجم --- */
+  if (type === "product"){
+    modal(`<h2>إضافة حجم</h2>
+      <label>اسم الحجم</label>
+      <input id="pn" placeholder="مثال: 500 مل">
+      <label>السعة بالمل</label>
+      <input id="pm" type="number" min="0" inputmode="numeric">
+      <label>عدد العبوات في البكت</label>
+      <input id="pc" type="number" min="1" value="12" inputmode="numeric">
+      <label>سعر بيع مقترح للعبوة</label>
+      <input id="px" type="number" min="0" value="0" inputmode="numeric">
+      <button id="sprod" style="width:100%">حفظ</button>`);
+
+    $("sprod").onclick = () => {
+      const name = $("pn").value.trim();
+      if (!name) return alert("أدخل اسم الحجم.");
+      if (d.products.some(p => p.name === name)) return alert("هذا الحجم موجود بالفعل.");
+      d.products.push({
+        id: id(), name, ml: num($("pm").value),
+        pack: Math.max(1, num($("pc").value) || 12),
+        price: num($("px").value)
+      });
+      closeModal(); toast("تم إضافة الحجم", "ok"); save();
+    };
+  }
+
+  /* --- عميل --- */
+  if (type === "customer"){
+    modal(`<h2>إضافة عميل</h2>
+      <label>الاسم</label>
+      <input id="cn">
+      <label>الهاتف</label>
+      <input id="cp" type="tel" inputmode="tel">
+      <button id="scu" style="width:100%">حفظ</button>`);
+
+    $("scu").onclick = () => {
+      const name = $("cn").value.trim();
+      if (!name) return alert("أدخل الاسم.");
+      if (d.customers.some(c => c.name === name)) return alert("هذا العميل موجود بالفعل.");
+      d.customers.push({ id: id(), name, phone: $("cp").value.trim() });
+      closeModal(); toast("تم إضافة العميل", "ok"); save();
+    };
+  }
+
+  /* --- مورد --- */
+  if (type === "supplier"){
+    modal(`<h2>إضافة مورد</h2>
+      <label>الاسم</label>
+      <input id="sun">
+      <label>الهاتف</label>
+      <input id="sup" type="tel" inputmode="tel">
+      <button id="ssu" style="width:100%">حفظ</button>`);
+
+    $("ssu").onclick = () => {
+      const name = $("sun").value.trim();
+      if (!name) return alert("أدخل الاسم.");
+      if (d.suppliers.some(s => s.name === name)) return alert("هذا المورد موجود بالفعل.");
+      d.suppliers.push({ id: id(), name, phone: $("sup").value.trim() });
+      closeModal(); toast("تم إضافة المورد", "ok"); save();
+    };
+  }
+
+  /* --- الأرصدة الافتتاحية --- */
+  if (type === "opening"){
+    modal(`<h2>تعديل الأرصدة الافتتاحية</h2>
+      <div class="notice err">⚠️ تعديل حساس — يُفضّل مرة واحدة عند البدء.</div>
+      <label>النقدية الافتتاحية</label>
+      <input id="o_cash" type="number" value="${num(d.openingCash)}" inputmode="numeric">
+      <label>مستحقات العملاء الافتتاحية</label>
+      <input id="o_ar" type="number" value="${d.openingAR}" inputmode="numeric">
+      <label>مستحقات الموردين الافتتاحية</label>
+      <input id="o_ap" type="number" value="${d.openingAP}" inputmode="numeric">
+      <label>مخزون الخامات</label>
+      <input id="o_raw" type="number" value="${d.rawStock}" inputmode="numeric">
+      <label>مخزون العبوات</label>
+      <input id="o_pack" type="number" value="${d.packStock}" inputmode="numeric">
+      <label>الأصول الثابتة</label>
+      <input id="o_eq" type="number" value="${d.equipment}" inputmode="numeric">
+      <button id="so" style="width:100%">حفظ التعديلات</button>`);
+
+    $("so").onclick = () => {
+      if (!confirm("تأكيد تعديل الأرصدة الافتتاحية؟")) return;
+      d.openingCash = num($("o_cash").value);
+      d.openingAR = num($("o_ar").value);
+      d.openingAP = num($("o_ap").value);
+      d.rawStock = num($("o_raw").value);
+      d.packStock = num($("o_pack").value);
+      d.equipment = num($("o_eq").value);
+      closeModal(); toast("تم تعديل الأرصدة", "ok"); save();
+    };
+  }
+}
+
+/* ============================================================
+   9) تعديل خلطة
+   ============================================================ */
+function editBatch(i){
+  const b = bat(i); if (!b) return;
+  const s = sold(i);
+
+  modal(`<h2>تعديل الخلطة</h2>
+    <div class="notice">المباع: <b>${s}</b> عبوة. لا يمكن خفض الإنتاج لأقل من المباع.</div>
+    <label>الحجم</label>
+    <select id="ep">${d.products.map(p => `<option value="${p.id}" ${p.id === b.productId ? "selected" : ""}>${p.name}</option>`).join("")}</select>
+    <label>عدد العبوات</label>
+    <input id="eq" type="number" min="${s}" value="${b.qty}" inputmode="numeric">
+    <label>الخامات</label>
+    <input id="er" type="number" min="0" value="${b.raw}" inputmode="numeric">
+    <label>العبوات</label>
+    <input id="ek" type="number" min="0" value="${b.pack}" inputmode="numeric">
+    <label>إضافي</label>
+    <input id="ee" type="number" min="0" value="${b.extra}" inputmode="numeric">
+    <button id="eb" style="width:100%">حفظ التعديل</button>`);
+
+  $("eb").onclick = () => {
+    const q = num($("eq").value), r = num($("er").value), k = num($("ek").value), e = num($("ee").value);
+    const p = prod($("ep").value);
+    const availableRaw = d.rawStock + b.raw;
+    const availablePack = d.packStock + b.pack;
+    const availableCash = cashBalance() + b.extra;
+
+    if (!p || q < s || q < 1) return alert("بيانات التعديل غير صحيحة.");
+    if (r > availableRaw) return alert("الخامات غير كافية (المتاح: " + money(availableRaw) + " ج).");
+    if (k > availablePack) return alert("العبوات غير كافية (المتاح: " + money(availablePack) + " ج).");
+    if (e > availableCash) return alert("النقدية لا تكفي (المتاح: " + money(availableCash) + " ج).");
+
+    d.rawStock = availableRaw - r;
+    d.packStock = availablePack - k;
+
+    const t = r + k + e;
+    Object.assign(b, {
+      productId: p.id, productName: p.name,
+      qty: q, raw: r, pack: k, extra: e,
+      totalCost: t, unitCost: t / q
+    });
+    closeModal(); toast("تم تعديل الخلطة", "ok"); save();
+  };
+}
+
+/* ============================================================
+   10) تعديل بيع
+   ============================================================ */
+function editSale(sid){
+  const s = d.sales.find(x => x.id === sid); if (!s) return;
+  const b = bat(s.batchId); if (!b) return;
+  const p = prod(s.productId);
+  const maxUnits = available(b) + s.units;
+  const initialPrice = s.mode === "carton" ? (s.displayQty > 0 ? s.total / s.displayQty : 0) : (s.units > 0 ? s.total / s.units : 0);
+
+  modal(`<h2>تعديل البيع</h2>
+    <div class="notice">الحد الأقصى: <b>${maxUnits}</b> عبوة</div>
+    <label>وحدة البيع</label>
+    <select id="esm">
+      <option value="unit" ${s.mode === "unit" ? "selected" : ""}>عبوة</option>
+      <option value="carton" ${s.mode === "carton" ? "selected" : ""}>بكت / كرتونة</option>
+    </select>
+    <label>عدد الوحدات</label>
+    <input id="esq" type="number" min="1" value="${s.displayQty}" inputmode="numeric">
+    <label>سعر الوحدة</label>
+    <input id="esp" type="number" min="0" value="${Math.round(initialPrice)}" inputmode="numeric">
+    <div id="editSaleCalc" class="notice info"></div>
+    <label>العميل</label>
+    <select id="esc">
+      <option value="">غير مسجل</option>
+      ${d.customers.map(c => `<option ${c.name === s.customer ? "selected" : ""}>${c.name}</option>`).join("")}
+    </select>
+    <label>المدفوع الآن</label>
+    <input id="epa" type="number" min="0" value="${s.paid}" inputmode="numeric">
+    <label>التاريخ</label>
+    <input id="esd" type="date" value="${s.date}">
+    <button id="esb" style="width:100%">حفظ التعديل</button>`);
+
+  const calc = () => {
+    const mode = $("esm").value;
+    const q = num($("esq").value), price = num($("esp").value);
+    const pack = p?.pack || 12;
+    const units = mode === "carton" ? q * pack : q;
+    const total = q * price;
+    const box = $("editSaleCalc");
+    if (q > 0 && price > 0){
+      box.className = "notice " + (units > maxUnits ? "err" : "ok");
+      box.innerHTML = `
+        ${mode === "carton" ? `الكراتين: <b>${money(q)}</b> • العبوات: <b>${money(units)}</b> • ` : ""}
+        الإجمالي: <b>${money(total)} ج</b>
+        ${units > maxUnits ? "<br>⚠️ أكبر من المتاح!" : ""}`;
+    }
+  };
+  ["esm","esq","esp"].forEach(x => $(x).addEventListener("input", calc));
+  calc();
+
+  $("esb").onclick = () => {
+    const mode = $("esm").value;
+    const q = num($("esq").value), price = num($("esp").value);
+    const pack = p?.pack || 12;
+    const units = mode === "carton" ? q * pack : q;
+    const total = q * price;
+    const paid = num($("epa").value);
+
+    if (q < 1 || price <= 0) return alert("أدخل الكمية والسعر.");
+    if (paid < 0) return alert("المدفوع لا يمكن أن يكون سالبًا.");
+    if (units > maxUnits) return alert("الكمية أكبر من المتاح (" + maxUnits + ").");
+    if (paid > total) return alert("المدفوع أكبر من الإجمالي.");
+
+    Object.assign(s, {
+      mode, displayQty: q, units, total, paid,
+      customer: $("esc").value, date: $("esd").value
+    });
+    closeModal(); toast("تم تعديل البيع", "ok"); save();
+  };
+}
+
+/* ============================================================
+   11) التنقل والأحداث
+   ============================================================ */
+document.addEventListener("click", e => {
+  const m = e.target.closest("[data-modal]");
+  const p = e.target.closest("[data-page]");
+  if (m) open(m.dataset.modal);
+  if (p){
+    document.querySelectorAll(".page").forEach(x => x.classList.remove("active"));
+    $(p.dataset.page).classList.add("active");
+    document.querySelectorAll("nav button").forEach(x => x.classList.remove("active"));
+    p.classList.add("active");
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+$("close").onclick = closeModal;
+$("modal").onclick = e => { if (e.target === $("modal")) closeModal(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+/* البحث */
+$("prodSearch").addEventListener("input", render);
+$("salesSearch").addEventListener("input", render);
+$("expSearch").addEventListener("input", render);
+
+/* فلاتر التقارير */
+document.querySelectorAll("[data-report-period]").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll("[data-report-period]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const p = btn.dataset.reportPeriod;
+    const now = new Date();
+    if (p === "month"){
+      reportFrom = month() + "-01";
+      reportTo = today();
+    } else if (p === "last"){
+      const lm = lastMonth();
+      const lastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+      reportFrom = lm + "-01";
+      reportTo = lm + "-" + String(lastDay).padStart(2, "0");
+    } else if (p === "year"){
+      reportFrom = year() + "-01-01";
+      reportTo = today();
+    } else {
+      reportFrom = null; reportTo = null;
+    }
+    $("fromDate").value = reportFrom || "";
+    $("toDate").value = reportTo || "";
+    render();
+  };
+});
+$("fromDate").addEventListener("change", e => { reportFrom = e.target.value || null; render(); });
+$("toDate").addEventListener("change", e => { reportTo = e.target.value || null; render(); });
+
+/* طباعة */
+$("printReport").onclick = () => window.print();
+
+/* النسخ الاحتياطي */
+$("backup").onclick = () => {
+  try {
+    const a = document.createElement("a");
+    const blob = new Blob([JSON.stringify(d, null, 2)], { type: "application/json" });
+    a.href = URL.createObjectURL(blob);
+    a.download = "ZAHI-Backup-" + today() + ".json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    toast("تم تصدير النسخة", "ok");
+  } catch(e){
+    toast("فشل التصدير: " + e.message, "err");
+  }
+};
+
+$("restore").onclick = () => $("file").click();
+
+$("file").onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const parsed = JSON.parse(r.result);
+      if (!parsed || typeof parsed !== "object") throw new Error("ملف غير صالح");
+      if (parsed.version && parsed.version > CURRENT_VERSION){
+        if (!confirm("الملف من إصدار أحدث (" + parsed.version + "). المتابعة؟")) return;
+      }
+      d = normalize(parsed);
+      save();
+      toast("تمت الاستعادة بنجاح", "ok");
+    } catch(x){
+      toast("ملف غير صالح: " + x.message, "err");
+    }
+  };
+  r.readAsText(f);
+  e.target.value = "";
+};
+
+/* CSV Export */
+$("csvExport").onclick = () => {
+  try {
+    const rows = [];
+    rows.push(["النوع","التاريخ","البيان","المبلغ","ملاحظات"].join(","));
+    d.sales.forEach(s => rows.push(["بيع", s.date, s.productName, s.total, (s.customer || "") + " | مدفوع:" + s.paid].join(",")));
+    d.expenses.forEach(e => rows.push(["مصروف", e.date, e.note, e.amount, e.category].join(",")));
+    d.collections.forEach(c => rows.push(["تحصيل", c.date, c.customer || "غير محدد", c.amount, ""].join(",")));
+    d.supplierPayments.forEach(p => rows.push(["دفعة مورد", p.date, p.supplier, p.amount, p.note].join(",")));
+    d.inventoryMoves.forEach(m => rows.push(["مخزون (" + m.mode + ")", m.date, (m.type === "raw" ? "خامات" : "عبوات"), m.amount, m.note].join(",")));
+    const csv = "\uFEFF" + rows.join("\n");
+    const a = document.createElement("a");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    a.href = URL.createObjectURL(blob);
+    a.download = "ZAHI-Report-" + today() + ".csv";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    toast("تم تصدير CSV", "ok");
+  } catch(e){
+    toast("فشل التصدير: " + e.message, "err");
+  }
+};
+
+/* إعادة تعيين */
+$("resetAll").onclick = () => {
+  if (!confirm("⚠️ سيتم حذف كل البيانات نهائيًا!\nمتابعة؟")) return;
+  if (!confirm("تأكيد أخير: لا يمكن التراجع.")) return;
+  localStorage.removeItem(KEY);
+  oldKeys.forEach(k => localStorage.removeItem(k));
+  d = clone(base);
+  save();
+  toast("تمت إعادة التعيين", "ok");
+};
+
+/* حفظ تلقائي كل 30 ثانية */
+setInterval(() => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e){} }, 30000);
+
+/* حفظ قبل الإغلاق */
+window.addEventListener("beforeunload", () => {
+  try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e){}
+});
+
+/* ============================================================
+   التشغيل
+   ============================================================ */
+render();
+setSaveState(false);
+
+})();
+</script>
+</body>
+</html>
